@@ -10,7 +10,7 @@ RWLock::RWLock(){
   pthread_cond_init(&okToWrite, NULL);
   pthread_mutex_init(&lock, NULL);
 #elif P1_SEMAPHORE
-   sem = new Semaphore("Fine Grain", 1);
+   sem = new Semaphore("Read Sem", 1);
 #else
   pthread_mutex_init(&lock, NULL);
 #endif
@@ -22,7 +22,7 @@ RWLock::~RWLock(){
   pthread_cond_destroy(&okToWrite);
   pthread_mutex_destroy(&lock);
 #elif P1_SEMAPHORE
-    ~sem();
+   sem->~Semaphore();
 #else
   pthread_mutex_destroy(&lock);
 #endif

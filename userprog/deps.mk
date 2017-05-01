@@ -385,7 +385,15 @@ rwlock.o: ../threads/rwlock.cc /usr/include/stdc-predef.h \
  /usr/include/semaphore.h /usr/include/sys/types.h \
  /usr/include/sys/select.h /usr/include/bits/select.h \
  /usr/include/bits/sigset.h /usr/include/sys/sysmacros.h \
- /usr/include/bits/semaphore.h
+ /usr/include/bits/semaphore.h ../threads/synch.h ../threads/copyright.h \
+ ../threads/thread.h ../threads/utility.h ../threads/bool.h \
+ ../machine/sysdep.h ../bin/copyright.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/x86_64-redhat-linux/5.3.1/include/stdarg.h \
+ /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+ /usr/include/string.h ../machine/machine.h ../threads/utility.h \
+ ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+ ../filesys/filesys.h ../filesys/openfile.h ../threads/list.h
 addrspace.o: ../userprog/addrspace.cc /usr/include/stdc-predef.h \
  ../bin/copyright.h ../threads/system.h ../threads/copyright.h \
  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \

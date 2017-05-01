@@ -84,6 +84,11 @@ public:
 private:
     char* name;				// for debugging
     // plus some other stuff you'll need to define
+
+    Thread *lockHolder;	
+	Semaphore *semaphore; 
+
+
 };
 
 // The following class defines a "condition variable".  A condition
@@ -137,6 +142,7 @@ public:
 
 private:
     char* name;
+
     // plus some other stuff you'll need to define
 };
 #endif // SYNCH_H

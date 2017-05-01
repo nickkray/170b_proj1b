@@ -16,7 +16,13 @@
 #include "synch.h"
 #include "hashchain.h"
 #include <iostream>
+
+
+#ifndef HASHCHAIN
 #include "rwlock.h"
+#endif
+
+
 using namespace std;
 
 #define YIELD() currentThread->Yield()
@@ -46,7 +52,7 @@ enum TestNumber {
 
 
 // testnum is set in main.cc
-int testnum = TEST_SEQUENCE;
+int testnum = TEST_PUTGET;
 
 const char* get_test_name(enum TestNumber n) {
   switch(n) {
