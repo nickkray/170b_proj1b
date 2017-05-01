@@ -120,3 +120,12 @@ HashMap:: ~HashMap() {
     delete[] table;
 }
 
+void HashMap::increment(int key, int value){
+	int v = get(key);
+	if(v == -1)
+		put(key, 1);
+	else	
+		put(key, v + value);
+}
+
+
