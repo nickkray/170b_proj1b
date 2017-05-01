@@ -12,7 +12,7 @@ all:  phashchain phashcoarse phashcoarserw  phashfine phashfinerw
 #all:  hashchain phashchain phashcoarse phashcoarserw  phashfine phashfinerw
 
 
-phashchain: phash.o ptest.cc
+phashchain: hashchain.o ptest.cc
 	$(CC) -o $@ $^ $(FLAGS0)
 
 phashcoarse: phash.cc rwlock.cc ptest.cc
