@@ -52,7 +52,7 @@ enum TestNumber {
 
 
 // testnum is set in main.cc
-int testnum = TEST_PUTGET;
+int testnum = TEST_RW_MULTIPLE_R;
 
 const char* get_test_name(enum TestNumber n) {
   switch(n) {

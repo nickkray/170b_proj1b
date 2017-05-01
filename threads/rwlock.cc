@@ -10,7 +10,9 @@ RWLock::RWLock(){
   pthread_cond_init(&okToWrite, NULL);
   pthread_mutex_init(&lock, NULL);
 #elif P1_SEMAPHORE
-   sem = new Semaphore("Read Sem", 1);
+   sem = new Semaphore("sem bae", 1);
+#elif P1_LOCK
+	wrt = new Lock("lock bae");
 #else
   pthread_mutex_init(&lock, NULL);
 #endif
@@ -23,6 +25,8 @@ RWLock::~RWLock(){
   pthread_mutex_destroy(&lock);
 #elif P1_SEMAPHORE
    sem->~Semaphore();
+#elif P1_LOCK
+	wrt->~Lock();
 #else
   pthread_mutex_destroy(&lock);
 #endif
@@ -40,6 +44,8 @@ void RWLock::startRead(){
   pthread_mutex_unlock(&lock);
 #elif P1_SEMAPHORE
     sem->P();
+#elif P1_LOCK
+	wrt->Acquire();
 #else
   pthread_mutex_lock(&lock);
 #endif
@@ -55,6 +61,8 @@ void RWLock::doneRead(){
 
 #elif P1_SEMAPHORE
     sem->V();
+#elif P1_LOCK
+	wrt->Release();
 #else
   pthread_mutex_unlock(&lock);
 #endif
@@ -72,6 +80,8 @@ void RWLock::startWrite(){
   pthread_mutex_unlock(&lock);
 #elif P1_SEMAPHORE
     sem->P();
+#elif P1_LOCK
+	wrt->Acquire();
 #else
   pthread_mutex_lock(&lock);
 #endif
@@ -88,6 +98,8 @@ void RWLock::doneWrite(){
   pthread_mutex_unlock(&lock);
 #elif P1_SEMAPHORE
     sem->V();
+#elif P1_LOCK
+	wrt->Release();
 #else
   pthread_mutex_unlock(&lock);
 #endif

@@ -20,6 +20,8 @@ private:
 
 #elif P1_SEMAPHORE
   Semaphore* sem;
+#elif P1_LOCK
+	Lock* wrt;
 #else 
   pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER; 
 #endif
