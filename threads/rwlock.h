@@ -23,9 +23,7 @@ private:
 #endif
   
  public:
-#ifdef P1_SEMAPHORE
- 
-#else
+
   RWLock();
   ~RWLock();
 
@@ -35,6 +33,6 @@ private:
   // Writer
   void startWrite();
   void  doneWrite();
-#endif
+
 };
 

@@ -21,6 +21,8 @@ RWLock::~RWLock(){
   pthread_cond_destroy(&okToRead);
   pthread_cond_destroy(&okToWrite);
   pthread_mutex_destroy(&lock);
+#elif P1_SEMAPHORE
+    ~sem();
 #else
   pthread_mutex_destroy(&lock);
 #endif
@@ -36,6 +38,8 @@ void RWLock::startRead(){
   this->WR--;
   this->AR++;
   pthread_mutex_unlock(&lock);
+#elif P1_SEMAPHORE
+    sem->P();
 #else
   pthread_mutex_lock(&lock);
 #endif
@@ -48,6 +52,9 @@ void RWLock::doneRead(){
   if(this->AR == 0 && this->WW > 0)
     pthread_cond_signal(&okToWrite);
   pthread_mutex_unlock(&lock);
+
+#elif P1_SEMAPHORE
+    sem->V();
 #else
   pthread_mutex_unlock(&lock);
 #endif
@@ -63,6 +70,8 @@ void RWLock::startWrite(){
   this->WW--;
   this->AW++;
   pthread_mutex_unlock(&lock);
+#elif P1_SEMAPHORE
+    sem->P();
 #else
   pthread_mutex_lock(&lock);
 #endif
@@ -77,6 +86,8 @@ void RWLock::doneWrite(){
   else if(WR > 0)
     pthread_cond_broadcast(&okToRead); //broadcast to all readers
   pthread_mutex_unlock(&lock);
+#elif P1_SEMAPHORE
+    sem->V();
 #else
   pthread_mutex_unlock(&lock);
 #endif
