@@ -1,51 +1,32 @@
-CC      = g++
-CFLAGS  = -O 
-LDFLAGS  = -O -lpthread 
-
-FLAGS0  = -O -lpthread -DHASHCHAIN
-FLAGS1  = -O -lpthread 
-FLAGS2  = -O -lpthread -DRWLOCK 
-FLAGS3  = -O -lpthread -DFINEGRAIN
-FLAGS4  = -O -lpthread -DFINEGRAIN -DRWLOCK 
-
-all:  phashchain phashcoarse phashcoarserw  phashfine phashfinerw
-#all:  hashchain phashchain phashcoarse phashcoarserw  phashfine phashfinerw
+# Copyright (c) 1992 The Regents of the University of California.
+# All rights reserved.  See copyright.h for copyright notice and limitation 
+# of liability and disclaimer of warranty provisions.
 
 
-phashchain: hashchain.o ptest.cc
-	$(CC) -o $@ $^ $(FLAGS0)
 
-phashcoarse: phash.cc rwlock.cc ptest.cc
-	$(CC) -o $@ $^ $(FLAGS1)
+#MAKE=make --no-print-directory
 
-phashcoarserw: phash.cc rwlock.cc ptest.cc
-	$(CC) -o $@ $^ $(FLAGS2)
+all: 
+	@ echo "## threads"
+	@ $(MAKE) -C threads
+	@ echo "## userprog"
+	@ $(MAKE) -C userprog
+	@ echo "## vm"
+	@ $(MAKE) -C vm
+	@ echo "## filesys"
+	@ $(MAKE) -C filesys
+#	@ echo "## network"
+#	@ $(MAKE) -C network
+	@ echo "## bin"
+	@ $(MAKE) -C bin
+	@ echo "## test"
+	@ $(MAKE) -C test
 
-phashfine: phash1.cc rwlock.cc ptest.cc
-	$(CC) -o $@ $^ $(FLAGS3)
-
-phashfinerw: phash1.cc rwlock.cc ptest.cc
-	$(CC) -o $@ $^ $(FLAGS4)
-
-run: 
-	./phash
-
-run1: 
-	./phashcoarse
-
-run2: 
-	./phashcoarserw
-
-run3: 
-	./phashfine
-
-run4: 
-	./phashfinerw
-
-.cc.o: 
-	$(CC)  $(CFLAGS) -c $<
-
-
+# don't delete executables in "test" in case there is no cross-compiler
 clean:
-	rm *.o hashchain phashchain phashcoarse phashcoarserw  phashfine phashfinerw
+	rm -f *~ */{core,nachos,DISK,*.o,swtch.s,*~} test/{*.coff} bin/{coff2flat,coff2noff,disassemble,out}
 
+
+turnin: clean
+	cd .. && tar czf code.tgz code
+	turnin ../code.tgz
