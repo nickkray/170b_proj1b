@@ -1,0 +1,36 @@
+the group members, what each person does and why each does a fair share of workload,
+a design explanation of these 3 tasks.
+how to compile and run your code.
+The name of files that are modified or created compared to the original Nacho source code. What functionalities are added to each file. Explain their functionalities. 
+What is completed and what is not. What is working and what is not working. And for the ones that are incomplete, what is their current status.
+
+
+- Nick Ray - Due to schedule conflicts, I did this segment of the project by myself but was with a partner for 1A. 
+
+- Nachos_sem
+
+	Just implemented P() and V() and intializers using existing semaphore implementation within Nachos. Critical areas that are wrapped in functions just need to be pointed to the atomic functions (P/V) and thus completes this segment of the project. Most difficult task was getting Nachos working correctly - actual task was straightforward.
+
+- Nachos_lock
+
+	For lock, we already have the implementation from 1A that deals with fine synchronization. The only addition is implementing the lock functionality. This requires recording which thread owns the current lock and a mutex (done with nachos semaphore). 
+
+	When intializing our lock, name is blank, owner is null, and mutex is unlocked.
+	For aquisition, we simply P() our semaphore and store the owner.
+
+	For release, we check that the releaser is the correct owner (ASSERT) and undo name/mutex(V).
+
+- Nachos_rw
+
+	For conditional variable
+
+
+Only following files were modified:
+
+rwlock.cc
+rwlock.h
+synch.cc
+synch.h
+threadtest.cc
+
+All is working and all tests are passing on my end. 
