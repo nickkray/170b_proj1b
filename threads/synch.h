@@ -86,7 +86,12 @@ private:
     // plus some other stuff you'll need to define
 
     Thread *whichThread;	
-    Semaphore *semaphore; 
+//    Semaphore *semaphore; 
+
+
+    // plus some other stuff you'll need to define
+    int value;         // mutex value, should always be 0/1 or some other binary value
+    List *queue;       // threads waiting to acquire the lock
 
 
 };
