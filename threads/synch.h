@@ -142,7 +142,7 @@ public:
 
 private:
     char* name;
-
+ List *waitQueue; 
     // plus some other stuff you'll need to define
 };
 #endif // SYNCH_H

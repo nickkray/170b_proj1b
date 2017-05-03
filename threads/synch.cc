@@ -121,10 +121,45 @@ bool Lock::isHeldByCurrentThread(){
 	return lockHolder == currentThread;
 }
 
-Condition::Condition(char* debugName) { }
+
+
+
+
+Condition::Condition(char* debugName) {
+name = debugName;
+waitQueue = new List;
+}
 Condition::~Condition() { }
 void Condition::Wait(Lock* conditionLock) {
-    ASSERT(FALSE);
+     Semaphore *waiter;
+    
+     ASSERT(conditionLock->isHeldByCurrentThread());
+
+     waiter = new Semaphore("condition", 0);
+     waitQueue->Append(waiter);
+     conditionLock->Release();
+     waiter->P();
+     conditionLock->Acquire();
+     delete waiter;
+
 }
-void Condition::Signal(Lock* conditionLock) { }
-void Condition::Broadcast(Lock* conditionLock) { }
+void Condition::Signal(Lock* conditionLock) {
+  Semaphore *waiter;
+    
+    ASSERT(conditionLock->isHeldByCurrentThread());
+    
+    if (!waitQueue->IsEmpty()) {
+        waiter = (Semaphore *)waitQueue->Remove();
+	waiter->V();
+}
+
+}
+void Condition::Broadcast(Lock* conditionLock) {
+
+
+    while (!waitQueue->IsEmpty()) {
+        Signal(conditionLock);
+}
+
+
+}

@@ -3,12 +3,13 @@
 
 RWLock::RWLock(){
 #ifdef P1_RWLOCK
-  WR = 0; AR = 0;
-  WW = 0; AW = 0;
+  //WR = 0; AR = 0;
+  //WW = 0; AW = 0;
 
-  pthread_cond_init(&okToRead, NULL);
-  pthread_cond_init(&okToWrite, NULL);
-  pthread_mutex_init(&lock, NULL);
+ okToRead = new Condition("let's rw bae");
+ okToWrite = new Condition("maybe we'll use this too");
+  
+  wrt = new Lock("lock bae");
 #elif P1_SEMAPHORE
    sem = new Semaphore("sem bae", 1);
 #elif P1_LOCK
@@ -20,28 +21,28 @@ RWLock::RWLock(){
 
 RWLock::~RWLock(){
 #ifdef P1_RWLOCK
-  pthread_cond_destroy(&okToRead);
-  pthread_cond_destroy(&okToWrite);
-  pthread_mutex_destroy(&lock);
+  okToRead->~Condition();
+  okToWrite->~Condition();
+wrt->~Lock();
 #elif P1_SEMAPHORE
    sem->~Semaphore();
 #elif P1_LOCK
 	wrt->~Lock();
 #else
-  pthread_mutex_destroy(&lock);
+  pthread_mutex_destroy(lock);
 #endif
 }
 
 void RWLock::startRead(){
 #ifdef P1_RWLOCK
-  pthread_mutex_lock(&lock);
+  wrt->Acquire();
   this->WR++;
   while(AW > 0 || WW > 0){ 
-    pthread_cond_wait(&okToRead, &lock); //waiting
+    okToRead->Wait(wrt); //waiting
   }
   this->WR--;
   this->AR++;
-  pthread_mutex_unlock(&lock);
+  wrt->Release();
 #elif P1_SEMAPHORE
     sem->P();
 #elif P1_LOCK
@@ -53,11 +54,11 @@ void RWLock::startRead(){
 
 void RWLock::doneRead(){
 #ifdef P1_RWLOCK
-  pthread_mutex_lock(&lock);
+  wrt->Acquire();
   this->AR--;
   if(this->AR == 0 && this->WW > 0)
-    pthread_cond_signal(&okToWrite);
-  pthread_mutex_unlock(&lock);
+    okToWrite->Signal(wrt);
+  wrt->Release();
 
 #elif P1_SEMAPHORE
     sem->V();
@@ -70,14 +71,14 @@ void RWLock::doneRead(){
 
 void RWLock::startWrite(){
 #ifdef P1_RWLOCK
-  pthread_mutex_lock(&lock);
+  wrt->Acquire();
   this->WW++;
   while((AW + AR) > 0){
-    pthread_cond_wait(&okToWrite, &lock); //waiting
+    okToWrite->Wait(wrt); //waiting
   }
   this->WW--;
   this->AW++;
-  pthread_mutex_unlock(&lock);
+  wrt->Release();
 #elif P1_SEMAPHORE
     sem->P();
 #elif P1_LOCK
@@ -89,13 +90,13 @@ void RWLock::startWrite(){
 
 void RWLock::doneWrite(){
 #ifdef P1_RWLOCK
-  pthread_mutex_lock(&lock);
+  wrt->Acquire();
   AW--;
   if(WW > 0)
-    pthread_cond_signal(&okToWrite); //signal one writer
+    okToWrite->Signal(wrt); //signal one writer
   else if(WR > 0)
-    pthread_cond_broadcast(&okToRead); //broadcast to all readers
-  pthread_mutex_unlock(&lock);
+    okToRead->Broadcast(wrt); //broadcast to all readers
+  wrt->Release();
 #elif P1_SEMAPHORE
     sem->V();
 #elif P1_LOCK

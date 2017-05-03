@@ -13,10 +13,10 @@ private:
   int WR, AR; //number of waiting readers and active readers
   int WW, AW; //number of waiting writers and active writers
 
-  pthread_cond_t okToWrite = PTHREAD_COND_INITIALIZER;
-  pthread_cond_t okToRead = PTHREAD_COND_INITIALIZER;
+  Condition* okToWrite; 
+  Condition* okToRead;
 
-  pthread_mutex_t lock=PTHREAD_MUTEX_INITIALIZER;
+  Lock* wrt;
 
 #elif P1_SEMAPHORE
   Semaphore* sem;
