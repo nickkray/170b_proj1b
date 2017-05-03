@@ -85,8 +85,8 @@ private:
     char* name;				// for debugging
     // plus some other stuff you'll need to define
 
-    Thread *lockHolder;	
-	Semaphore *semaphore; 
+    Thread *whichThread;	
+    Semaphore *semaphore; 
 
 
 };
@@ -142,7 +142,7 @@ public:
 
 private:
     char* name;
- List *waitQueue; 
+ List *list; 
     // plus some other stuff you'll need to define
 };
 #endif // SYNCH_H
