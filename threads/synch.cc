@@ -161,7 +161,7 @@ Condition::Condition(char* debugName) {
      list = new List;
 }
 Condition::~Condition() {
-
+    delete list;
 }
 void Condition::Wait(Lock* conditionLock) {
      Semaphore *waiter;
